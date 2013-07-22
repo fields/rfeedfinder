@@ -106,7 +106,12 @@ class Rfeedfinder
       fulluri = "http://www.youtube.com/rss/tag/#{$1}/videos.rss"
     end
         
-    data = Rfeedfinder.open_doc(fulluri, options)
+    data = nil
+    if options[:use_data]
+      data = options[:use_data]
+    else
+      data = Rfeedfinder.open_doc(fulluri, options)
+    end
     return [] if data.nil?
 
     # If we used the google link finder, then we should set the new URL
@@ -482,7 +487,7 @@ class Rfeedfinder
     # We'll see if the need arises and then add more later if needed.
 
     re = Regexp.new("(#{protocol_whitelist.join('|')}):" + \
-      "\/\/([[:alpha:][:digit:].]{2,})([.]{1})([[:alpha:]]{2,4})(\/)")
+      "\/\/([[:alpha:][:digit:]\\-.]{2,})([.]{1})([[:alpha:]]{2,4})(\/)")
 
     # For the sake of the regular expression check we add a back slash
     # at the end of the URL
